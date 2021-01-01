@@ -1,0 +1,1 @@
+register <cf-user-handler>
