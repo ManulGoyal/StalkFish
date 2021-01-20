@@ -22,6 +22,7 @@ GUILD = os.getenv('DISCORD_GUILD')
 PROBLEM_STALK_CHANNEL = os.getenv('PROBLEM_STALK_CHANNEL')
 CONTEST_STALK_CHANNEL = os.getenv('CONTEST_STALK_CHANNEL')
 BOT_CMD_CHANNEL = os.getenv('BOT_CMD_CHANNEL')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
 CMD_FILENAME = 'commands.txt'
 VERIFICATION_TIMEOUT = 20
 DB_NAME = 'StalkDB'
@@ -29,7 +30,7 @@ DB_NAME = 'StalkDB'
 guild = None
 bot_cmd_channel = None
 
-connect(DB_NAME)
+connect(f"mongodb+srv://manul:{DB_PASSWORD}@cluster0.nvmh3.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
 
 intents = discord.Intents.default()
 intents.members = True
