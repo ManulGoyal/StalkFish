@@ -1,1 +1,2 @@
 register <cf-user-handler>
+stalk problem/contest on/off

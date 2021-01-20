@@ -49,6 +49,24 @@ class CFApi:
             else:
                 return resp_json['result']
 
+    async def get_contests(self, gym: bool = False) -> Optional[dict]:
+        async with self.session.get(f'{CF_API_URL}/contest.list?gym={str(gym).lower()}') as resp:
+            resp_json = json.loads(await resp.text())
+            if resp_json['status'] == 'FAILED':
+                logging.error(f"Some error occurred while fetching contests")
+                return None
+            else:
+                return resp_json['result']
+
+    async def get_rating_changes(self, contest_id) -> Optional[dict]:
+        async with self.session.get(f'{CF_API_URL}/contest.ratingChanges?contestId={contest_id}') as resp:
+            resp_json = json.loads(await resp.text())
+            if resp_json['status'] == 'FAILED':
+                logging.error(f"Some error occurred while fetching rating changes for contest {contest_id}")
+                return None
+            else:
+                return resp_json['result']
+
     async def close(self):
         await self.session.close()
 
