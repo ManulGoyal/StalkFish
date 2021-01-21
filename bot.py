@@ -29,8 +29,8 @@ DB_NAME = 'StalkDB'
 
 guild = None
 bot_cmd_channel = None
-
-connect(f"mongodb+srv://manul:{DB_PASSWORD}@cluster0.nvmh3.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
+# print(f"mongodb+srv://manul:{DB_PASSWORD}@cluster0.nvmh3.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
+connect(host=f"mongodb+srv://manul:{DB_PASSWORD}@cluster0.nvmh3.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
 
 intents = discord.Intents.default()
 intents.members = True
