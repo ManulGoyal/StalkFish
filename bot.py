@@ -14,6 +14,8 @@ from documents import *
 from dotenv import load_dotenv
 import datetime
 
+DEBUG = False
+
 load_dotenv()
 logging.basicConfig(level=logging.INFO)
 
@@ -25,12 +27,18 @@ BOT_CMD_CHANNEL = os.getenv('BOT_CMD_CHANNEL')
 DB_PASSWORD = os.getenv('DB_PASSWORD')
 CMD_FILENAME = 'commands.txt'
 VERIFICATION_TIMEOUT = 20
-DB_NAME = 'StalkDB'
 
 guild = None
 bot_cmd_channel = None
 # print(f"mongodb+srv://manul:{DB_PASSWORD}@cluster0.nvmh3.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
-connect(host=f"mongodb+srv://manul:{DB_PASSWORD}@cluster0.nvmh3.mongodb.net/{DB_NAME}?retryWrites=true&w=majority")
+if DEBUG:
+    DB_NAME = 'test'
+else:
+    DB_NAME = 'StalkDB'
+
+DB_URI = f"mongodb+srv://manul:{DB_PASSWORD}@cluster0.nvmh3.mongodb.net/{DB_NAME}?retryWrites=true&w=majority"
+
+connect(host=DB_URI)
 
 intents = discord.Intents.default()
 intents.members = True

@@ -6,10 +6,28 @@ from documents import *
 COLORS = [discord.Color.blue(), discord.Color.green(), discord.Color.magenta(), discord.Color.purple(),
           discord.Color.orange(), discord.Color.dark_gold(), discord.Color.teal()]
 ROLES = ['senior', 'junior', 'sophomore', 'freshman', 'pg']
-EMOJIS = [':100:', ':ok_hand:', ':clap:', ':bouquet:', ':fire:', ]
+EMOJIS = [':100:', ':ok_hand:', ':clap:', ':bouquet:', ':fire:']
 CONGRATS_MESSAGES = ['Congratulations to the top performers!', 'Way to go guys! Keep it up!',
                      'Yay! You rule guys! Keep it up!', 'Well done guys! Never stop practising!',
                      'Awesome performance! Remember, practice makes a man perfect!']
+RANK_NUM_EMOJIS = [':first_place:', ':second_place:', ':third_place:']
+SEP_EMOJI = ':small_orange_diamond:'
+CF_TIERS = {1000: 'Pupil', 1200: 'Apprentice', 1400: 'Specialist', 1600: 'Expert', 1900: 'Candidate Master',
+            2100: 'Master', 2300: 'International Master', 2400: 'Grandmaster', 2600: 'International Grandmaster',
+            3000: 'Legendary Grandmaster'}
+GITHUB_LINK = 'https://github.com/ManulGoyal/StalkFish'
+
+
+def get_cf_tier(rating: int) -> str:
+    if rating < 1000:
+        return 'Newbie'
+    if rating >= 3000:
+        return 'Legendary Grandmaster'
+    for r, t in CF_TIERS.items():
+        if rating >= r:
+            tier = t
+        else:
+            return tier
 
 
 def read_commands_from_file(filename: str) -> Dict[str, str]:
@@ -30,7 +48,7 @@ def get_submission_embed(username: str, cf_handle: str, problem: dict) -> discor
     embed = discord.Embed(title=f"{username} solved {problem['name']}!",
                           color=random.choice(COLORS), url=get_problem_url(problem))
     # embed.set_author(name='StalkFish', icon_url='https://www.chessprogramming.org/images/0/09/Stockfish-logo.png')
-    # embed.set_footer(text='StalkFish ©. Stalking since 2021.')
+    # embed.set_footer(text=f'StalkFish ©. Stalking since 2021. [Github]({GITHUB_LINK})')
     embed.add_field(name="Handle", value=cf_handle)
     if 'rating' in problem:
         embed.add_field(name="Problem Rating", value=f"{problem['rating']}", inline=True)
@@ -52,29 +70,43 @@ def get_contest_embed(rating_changes: dict, contest_id: int, contest_name: str, 
     embed = discord.Embed(title=f"{contest_name} Results", color=random.choice(COLORS),
                           url=f"https://codeforces.com/contests/{contest_id}")
     embed.set_author(name='StalkFish', icon_url='https://www.chessprogramming.org/images/0/09/Stockfish-logo.png')
-    embed.set_footer(text='StalkFish ©. Stalking since 2021.')
+    embed.set_footer(text=f'StalkFish ©. Stalking since 2021.')
 
     for role in ROLES:
         if len(user_results[role]) == 0:
             continue
 
-        embed.add_field(name=role.capitalize(), value=f"{random.choice(CONGRATS_MESSAGES)} "
-                                                      f"{random.choice(EMOJIS)}{random.choice(EMOJIS)}", inline=False)
+        # embed.add_field(name=role.capitalize(), value=f"{random.choice(CONGRATS_MESSAGES)} "
+        #                                               f"{random.choice(EMOJIS)}{random.choice(EMOJIS)}", inline=False)
         rank_str = ""
         name_str = ""
         handle_str = ""
         rating_str = ""
-        for result in user_results[role]:
+        ranklist_str = ""
+
+        for i, result in enumerate(user_results[role]):
+            ranklist_str += f"{RANK_NUM_EMOJIS[i]} **{result['user']['name']}** " \
+                      f"([{result['rating_change']['handle']}]" \
+                      f"(https://codeforces.com/profile/{result['rating_change']['handle']})) {SEP_EMOJI} " \
+                      f"**Rank:** {result['rating_change']['rank']} {SEP_EMOJI} **Rating:** " \
+                      f"{result['rating_change']['oldRating']} ➯ {result['rating_change']['newRating']}"
+
+            if get_cf_tier(result['rating_change']['oldRating']) != get_cf_tier(result['rating_change']['newRating']):
+                ranklist_str += f" {SEP_EMOJI} Congrats on becoming **{get_cf_tier(result['rating_change']['newRating'])}**!"
+            ranklist_str += '\n\n'
             rank_str += f"{result['rating_change']['rank']}\n"
             name_str += f"[{result['user']['name']}]" \
                         f"(https://codeforces.com/profile/{result['rating_change']['handle']})\n"
             handle_str += f"{result['rating_change']['handle']}\n"
             rating_str += f"{result['rating_change']['oldRating']} ➯ {result['rating_change']['newRating']}"
 
-        embed.add_field(name="Rank", value=rank_str, inline=True)
-        embed.add_field(name="Name", value=name_str, inline=True)
+        # embed.add_field(name="Rank", value=rank_str, inline=True)
+        # embed.add_field(name="Name", value=name_str, inline=True)
         # embed.add_field(name="Handle", value=handle_str, inline=True)
-        embed.add_field(name="Rating", value=rating_str, inline=True)
+        # embed.add_field(name="Rating", value=rating_str, inline=True)
+        embed.add_field(name=role.capitalize(), value=f"{random.choice(CONGRATS_MESSAGES)} "
+                                                      f"{random.choice(EMOJIS)}{random.choice(EMOJIS)}\n\n"
+                                                      f"{ranklist_str}", inline=False)
 
     return embed
 
