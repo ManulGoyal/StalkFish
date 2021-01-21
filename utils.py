@@ -52,8 +52,7 @@ def get_submission_embed(username: str, cf_handle: str, problem: dict) -> discor
     embed.add_field(name="Handle", value=cf_handle)
     if 'rating' in problem:
         embed.add_field(name="Problem Rating", value=f"{problem['rating']}", inline=True)
-    if 'tags' in problem:
-        print(problem['name'], problem['contestId'], problem['tags'])
+    if 'tags' in problem and len(problem['tags']) > 0:
         embed.add_field(name="Tags", value=', '.join(problem['tags']), inline=False)
     # embed.add_field(name="Link", value=get_problem_url(problem))
     return embed
