@@ -72,7 +72,7 @@ async def on_ready():
         raise Exception(f"No channel named {CONTEST_STALK_CHANNEL} found in server {guild.name}")
 
     problem_stalker = ProblemStalker(problem_stalk_channel, guild)
-    contest_stalker = ContestStalker(contest_stalk_channel, guild, datetime.time(hour=16, minute=0))
+    contest_stalker = ContestStalker(contest_stalk_channel, guild)
     loop = asyncio.get_event_loop()
     task = loop.create_task(problem_stalker.stalk())
     loop.create_task(contest_stalker.stalk())

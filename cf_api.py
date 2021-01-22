@@ -62,7 +62,7 @@ class CFApi:
         async with self.session.get(f'{CF_API_URL}/contest.ratingChanges?contestId={contest_id}') as resp:
             resp_json = json.loads(await resp.text())
             if resp_json['status'] == 'FAILED':
-                logging.error(f"Some error occurred while fetching rating changes for contest {contest_id}")
+                # logging.error(f"Some error occurred while fetching rating changes for contest {contest_id}")
                 return None
             else:
                 return resp_json['result']
