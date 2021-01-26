@@ -53,7 +53,8 @@ class ContestStalker:
                                                             key=lambda i: i['rating_change']['rank'], reverse=True)
                             embed = get_contest_embed(desired_rating_changes, contest['id'],
                                                       contest['name'], top=3)
-                            await self.channel.send(embed=embed)
+                            if embed is not None:
+                                await self.channel.send(embed=embed)
                         break
                     else:
                         break

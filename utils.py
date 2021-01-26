@@ -1,4 +1,4 @@
-from typing import Dict
+from typing import Dict, Optional
 import discord
 import random
 from documents import *
@@ -58,7 +58,8 @@ def get_submission_embed(username: str, cf_handle: str, problem: dict) -> discor
     return embed
 
 
-def get_contest_embed(rating_changes: dict, contest_id: int, contest_name: str, top: int = 3) -> discord.Embed:
+def get_contest_embed(rating_changes: dict, contest_id: int, contest_name: str, top: int = 3)\
+        -> Optional[discord.Embed]:
     user_results = {}
     for role in ROLES:
         user_results[role] = []
@@ -72,10 +73,11 @@ def get_contest_embed(rating_changes: dict, contest_id: int, contest_name: str, 
     embed.set_author(name='StalkFish', icon_url='https://www.chessprogramming.org/images/0/09/Stockfish-logo.png')
     embed.set_footer(text=f'StalkFish ©. Stalking since 2021.')
 
+    empty = True
     for role in ROLES:
         if len(user_results[role]) == 0:
             continue
-
+        empty = False
         # embed.add_field(name=role.capitalize(), value=f"{random.choice(CONGRATS_MESSAGES)} "
         #                                               f"{random.choice(EMOJIS)}{random.choice(EMOJIS)}", inline=False)
         rank_str = ""
@@ -107,8 +109,10 @@ def get_contest_embed(rating_changes: dict, contest_id: int, contest_name: str, 
         embed.add_field(name=role.capitalize(), value=f"{random.choice(CONGRATS_MESSAGES)} "
                                                       f"{random.choice(EMOJIS)}{random.choice(EMOJIS)}\n\n"
                                                       f"{ranklist_str}", inline=False)
-
-    return embed
+    if not empty:
+        return embed
+    else:
+        return None
 
 
 def fetch_user_roles(guild: discord.Guild, **kwargs) -> Dict[str, Dict[str, str]]:
