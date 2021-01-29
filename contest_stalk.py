@@ -9,9 +9,9 @@ from utils import *
 class ContestStalker:
 
     def __init__(self, channel: discord.abc.GuildChannel, guild: discord.Guild,
-                 interval: int = 600, recency: int = 5) -> None:
+                 interval: int = 600, recency: int = 7) -> None:
         self.interval = interval
-        self.recency =recency
+        self.recency = recency
         self.guild = guild
         self.channel = channel
 
@@ -55,7 +55,7 @@ class ContestStalker:
                                                       contest['name'], top=3)
                             if embed is not None:
                                 await self.channel.send(embed=embed)
-                        break
+
                     else:
                         break
 
