@@ -50,7 +50,7 @@ class ContestStalker:
 
                         if len(desired_rating_changes) > 0:
                             desired_rating_changes = sorted(desired_rating_changes,
-                                                            key=lambda i: i['rating_change']['rank'], reverse=True)
+                                                            key=lambda i: i['rating_change']['rank'])
                             embed = get_contest_embed(desired_rating_changes, contest['id'],
                                                       contest['name'], top=3)
                             if embed is not None:
